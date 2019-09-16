@@ -1,0 +1,4 @@
+# Fichier de configuration pour apache 
+# Interdire l'acces au dossier sql 
+order deny,allow
+deny from all 

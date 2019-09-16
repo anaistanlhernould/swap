@@ -1,0 +1,118 @@
+/*GENERAL*/
+a{
+    text-decoration: none; 
+    color : #000; 
+}
+
+a:hover {
+    text-decoration : none; 
+    color : rgb(37, 37, 37);
+}
+
+.navbar-expand-lg .navbar-nav .nav-link{
+    padding-right : 3.5rem !important; 
+    padding-left : 3.5rem !important; 
+}
+
+.bouton_lien{
+padding: 5px; 
+}
+
+.h1_page{
+    font-size : 1.7em; 
+    font-weight: lighter; 
+    text-align: center; 
+    margin-top : 30px; 
+    margin-bottom: 30px; 
+}
+
+/*DEPOT ANNONCE*/
+.carre_photo{
+    width : 100%; 
+    height : 100px;  
+    background: #000; 
+}
+
+.carre_photo i {
+    color : white; 
+    font-size : 2em; 
+    margin : 30px 10px 10px 35px; 
+}
+
+.depot_annonce{
+    margin-left : 1em; 
+}
+
+.input_photo{
+    display : none; 
+}
+
+/*TABLEAU GESTION BACK-OOFICHE*/
+.tab_gest tr td{
+    font-size : 0.8em; 
+}
+
+.tab_gest tr th{
+    font-size : 0.9em; 
+    background: #000; 
+    color: white; 
+}
+
+.tab_gest{
+    width : 85%; 
+    margin : 0 auto; 
+}
+
+/*GESTION DES CATEGORIES*/
+#form_categorie{
+    margin-left : 5%; 
+}
+
+#list_categories{
+    width : 50%; 
+    margin : 40px auto 0px auto; 
+}
+
+/*GESTION DES ANNONCES*/
+.img_gestion_annonces{
+    width : 40%;
+}
+
+/* INDEX FRONT*/
+.img_gestion_accueil{
+    width: 150px;
+    margin-top : 40px; 
+    margin-left : 40px; 
+}
+
+/*ANNONCES*/
+.annonce_body{
+    width : 800px; 
+}
+
+.button_contacter{
+    height: 40px; 
+    border-radius : 0px; 
+}
+
+.img1_annonce{
+    width : 70%; 
+}
+
+.description{
+    width : 80%; 
+}
+
+.img1_autre_annonce{
+    width : 250px; 
+}
+
+.img_annonce{
+    width : 200px; 
+}
+
+.membre_commentaire{
+    font-size : 0.8em; 
+    color : rgb(32, 32, 32);
+    font-weight: bold; 
+}

@@ -29,15 +29,16 @@ $photo = $req_photo->fetch(PDO::FETCH_ASSOC);
 
 // RECUPERATION AUTRES ANNONCES
 $req_annonce = $pdo->prepare(
-    'SELECT img1
+    'SELECT img1, id_annonce
     FROM photos p
     LEFT JOIN annonces a ON a.photo_id = p.id_photo
     LEFT JOIN categories c ON a.categorie_id = c.id_categorie
-    WHERE c.id_categorie = :id
-    LIMIT 1,4'
+    WHERE c.id_categorie = :id AND a.id_annonce != :id_actuel
+    LIMIT 4'
     ); 
 
 $req_annonce->bindParam(':id', $publication['categorie_id']); 
+$req_annonce->bindParam(':id_actuel', $publication['id_annonce']); 
 $req_annonce->execute(); 
 
 $autre_annonce = $req_annonce->fetchAll(PDO::FETCH_ASSOC);
@@ -84,10 +85,31 @@ if(isset($_POST['noter']) && getMembre()!== null) {
 
         $req_note->execute(); 
         ajouterFlash('success', 'Votre note a bien été enregistrée');
-
-
     }
 }
+
+
+// CALCUL MOYENNE NOTE 
+// 5 membres les mieux notés 
+$req = $pdo->prepare(
+    'SELECT ROUND(AVG(note),2/2) AS moyenne
+    FROM notes
+    WHERE membre_id2 = :id_membre'
+); 
+
+$req->bindValue(':id_membre', getMembreBy($pdo, 'id_membre', $publication['membre_id'])['id_membre']);
+$req->execute();
+
+$resultat_note = $req->fetch(PDO::FETCH_ASSOC);
+
+// VARIABLE ETOILE 
+// etoile vide 
+$etoile_vide = '<i class="far fa-star"></i>'; 
+$demi_etoile = '<i class="fas fa-star-half-alt"></i>';
+$etoile_pleine = '<i class="fas fa-star"></i>';
+
+$arrondi = round($resultat_note['moyenne'],0,PHP_ROUND_HALF_DOWN);
+$restant = 5 - ($arrondi); 
 
 
 // AFFICHAGE 
@@ -101,12 +123,30 @@ include __DIR__ .'/assets/includes/header.php';
 
 <div class="row mt-4">
     <h5 class=" ml-5 col-md-9"> <?= htmlspecialchars($publication['titre']) ?? ''; ?> </h5>
-    <button type="button" class="btn btn-dark button_contacter" > Contacter <?= getMembreBy($pdo, 'id_membre', $publication['membre_id'])['prenom']; ?></button>
+    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal" > Contacter <?= getMembreBy($pdo, 'id_membre', $publication['membre_id'])['prenom']; ?></button>
 </div>
 <hr>
 
-
-
+<!-- Modal pour contact -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Infos Vendeur</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p> Téléphone : <?= getMembreBy($pdo, 'id_membre', $publication['membre_id'])['telephone']?></p>
+                    <p> Email : <?= getMembreBy($pdo, 'id_membre', $publication['membre_id'])['email']?></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <div class="row">
     <div class="col-md-6 ml-5">
         <img src="assets/img/<?= $photo['img1']?>" class="img1_annonce">
@@ -128,7 +168,17 @@ include __DIR__ .'/assets/includes/header.php';
 
     <p class="col"><small class="text-muted"><i class="fas fa-calendar-alt"></i> Date publication : <?= (new DateTime($publication['date_enregistrement']))->format('d/m/Y')?></small></p>
 
-    <p class="col"><small class="text-muted"><?= getMembreBy($pdo, 'id_membre', $publication['membre_id'])['pseudo']; ?></small></p>
+    <p class="col"><small class="text-muted"><?= getMembreBy($pdo, 'id_membre', $publication['membre_id'])['pseudo']; ?></small>
+        <?php 
+            for ($i = 0; $i < $arrondi; $i++){
+                echo($etoile_pleine);
+            }
+            for ($i = 0; $i < $restant; $i++){
+                echo($etoile_vide);
+            }
+        ?>
+    </p>
+
 
 
     <p class=" col"><small class="text-muted"><?= $publication['prix'] ?> €</small></p>
@@ -162,10 +212,10 @@ include __DIR__ .'/assets/includes/header.php';
                 </div>
                 <div class="modal-body">
                     <form action="annonce.php?id=<?=$publication['id_annonce']?>" method="post">
-                    <div class="form-group">
-                        <label>Votre commentaire</label>
-                        <textarea name="commentaire" class="form-control"></textarea>
-                    </div>
+                        <div class="form-group">
+                            <label>Votre commentaire</label>
+                            <textarea name="commentaire" class="form-control"></textarea>
+                        </div>
                     <input type="submit" name="commenter" value="Commenter" class="btn btn-dark">
                     </form>
                 </div>
@@ -214,17 +264,21 @@ include __DIR__ .'/assets/includes/header.php';
 <hr>
 <br>
 
+<!-- Autres annonces -->
+
 <div class="row ml-5">
     <?php foreach($autre_annonce as $annonce) :  ?>
         <div class="col">
-            <img src="assets/img/<?= $annonce['img1']?>" class="img1_autre_annonce">
+            <a href="annonce.php?id=<?= $annonce['id_annonce']?>">
+                <img src="assets/img/<?= $annonce['img1']?>" class="img1_autre_annonce">
+            </a>
         </div>
     <?php endforeach; ?>
 </div>
 
 <hr>
     <div class="row ml-5">
-        <a href="#" class="col-md-2"><small class="text-muted"> Retour vers les annonces</small></a>
+        <a href="index.php" class="col-md-2"><small class="text-muted"> Retour vers les annonces</small></a>
     </div>
 <hr>
 

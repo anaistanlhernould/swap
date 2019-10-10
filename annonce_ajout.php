@@ -97,22 +97,22 @@ if (isset($_POST['annonce_ajout'])){
 }
 
 
-
 // AFFICHAGE 
 $page_title ='Ajouter votre annonce';
 $meta_description_content = ' Voici la page pour ajouter une annonce sur le site SWAP'; 
 include __DIR__ .'/assets/includes/header.php';
 ?>
-
+<?php if (getMembre() === null): ?>
+<h3 class="text-center mt-3"> Veuillez vous connecter pour ajouter une annonce </h3>
+<?php else : ?> 
 <h1 class="text-center mt-3"> Ajouter votre annonce </h1>
+<?php endif ; ?> 
 
 <!-- MSG FLASH -->
 <?php include __DIR__ . '/assets/includes/msg_flash.php'; ?> 
 
-<?php if (getMembre() === null): ?>
-<?=  ajouterFlash('warning', 'Vous devez être connecté pour poster une annonce') ?> 
 
-<?php else : ?> 
+<?php if (getMembre() != null): ?>
 
 <form action="annonce_ajout.php" method="post" class="ml-5 mt-5 mr-1" enctype="multipart/form-data">
     <div class="form-row">

@@ -2,7 +2,7 @@
 
 try{
     $pdo = new PDO (
-        sprintf('mysql:host=%s;dbname=%s;', DB_HOST, DB_NAME), 
+        sprintf('mysql:host=%s;dbname=%s;charset=utf8', DB_HOST, DB_NAME), 
         DB_USER, 
         DB_PASS, 
         [

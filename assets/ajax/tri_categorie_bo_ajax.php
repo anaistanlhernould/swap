@@ -1,3 +1,4 @@
+
 <?php 
 
 require_once __DIR__ . '/../config/bootstrap_admin.php';
@@ -14,7 +15,6 @@ $req = $pdo->prepare(
 $req->bindParam(':titre', $_POST['titre']); 
 $req->execute(); 
 $resultat = $req->fetchAll(PDO::FETCH_ASSOC);
-
 
 $tab['resultat'] = '<table class="table table-bordered text-center mt-5 table-sm tab_gest">';
     $tab['resultat'] .= '<tr>';
@@ -36,7 +36,6 @@ $tab['resultat'] = '<table class="table table-bordered text-center mt-5 table-sm
     
         foreach($resultat as $annonce) {
             $tab['resultat'] .= '<tr>';
-
                 $tab['resultat'] .= '<td>'.$annonce['id_annonce'].'</td>';
                 $tab['resultat'] .= '<td>'.$annonce['titre_annonces'].'</td>';
 
@@ -70,8 +69,7 @@ $tab['resultat'] = '<table class="table table-bordered text-center mt-5 table-sm
 
             $tab['resultat'] .= '</tr>';
         }
-
     $tab['resultat'] .= '</table>';
 
 
-echo json_encode($tab); 
+echo json_encode($tab);

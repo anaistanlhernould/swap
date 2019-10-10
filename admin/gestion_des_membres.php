@@ -4,11 +4,9 @@
 require_once __DIR__ . '/../assets/config/bootstrap_admin.php';
 
 // TRAITEMENT 
-
 $modifier_membre = getMembreById($pdo, $_GET['id'] ?? null);
 
-// RECUPERATION INFORMATION DU MEMBRE 
-
+// MODIFICATION DU MEMBRE
 if(isset($_POST['mettre_jour'])){
     if (($modifier_membre['id_membre']) == null){
         ajouterFlash ('warning', 'Aucun membre n\'a été selectionné');
@@ -42,17 +40,15 @@ if(isset($_POST['mettre_jour'])){
         $req->bindParam(':id', $modifier_membre['id_membre'], PDO::PARAM_INT);
 
         $req->execute(); 
-        ajouterFlash('success', 'La mise à jour a bien été prise en compte'); 
+        ajouterFlash('success', 'Le membre a été modifiée'); 
     }
 }
 
 // SUPPRESSION MEMBRE 
-
-if (isset($_POST['supprimer'])){
+if (isset($_POST['supprimer_membre'])){
     if (($modifier_membre['id_membre']) == null){
         ajouterFlash ('warning', 'Aucun membre n\'a été selectionné');
     } else {
-                // Suppression du post en base de données 
         $req = $pdo->prepare(
             'DELETE
             FROM membres 
@@ -66,13 +62,13 @@ if (isset($_POST['supprimer'])){
 }
 
 // AFFICHAGE 
-$page_title ='Gestion des categories';
+$page_title ='Gestion des membres';
 include __DIR__ .'/../assets/includes/header_admin.php';
 ?>
 <?php include __DIR__ . '/../assets/includes/msg_flash.php'; ?> 
 
-<h1 class="h1_page"> Gestion des membres </h1>
-<hr>
+    <h1 class="h1_page"> Gestion des membres </h1>
+    <hr>
 
     <table class="table table-bordered text-center mt-5 table-sm tab_gest">
         <tr>
@@ -89,37 +85,37 @@ include __DIR__ .'/../assets/includes/header_admin.php';
         </tr>
 
         <?php foreach(listeMembres($pdo) as $membres) : ?> 
-        <tr>
-            <td> <?= $membres['id_membre']?> </td>    
-            <td> <?= $membres['pseudo']?> </td>    
-            <td> <?= $membres['nom']?> </td>
-            <td> <?= $membres['prenom']?> </td>
-            <td> <?= $membres['email']?> </td>
-            <td> <?= $membres['telephone']?> </td>
-            <?php if (($membres['civilite']) == 0) : ?> 
-                <td> Femme </td>
-            <?php else : ?> 
-                <td> Hommes </td>
-            <?php endif ?> 
-            <?php if (($membres['statut']) == 0) : ?> 
-                <td> membre </td>
-            <?php else : ?> 
-                <td> admin </td>
-            <?php endif ?> 
-            <td> <?= $membres['date_enregistrement']?> </td>
-            
-            <td> 
-                <a href="gestion_des_membres.php?id=<?=$membres['id_membre']?>" class="bouton_lien"><i class="far fa-edit"></i></a>
-            </td>
-        </tr>
+            <tr>
+                <td> <?= $membres['id_membre']?> </td>    
+                <td> <?= $membres['pseudo']?> </td>    
+                <td> <?= $membres['nom']?> </td>
+                <td> <?= $membres['prenom']?> </td>
+                <td> <?= $membres['email']?> </td>
+                <td> <?= $membres['telephone']?> </td>
+                <?php if (($membres['civilite']) == 0) : ?> 
+                    <td> Femme </td>
+                <?php else : ?> 
+                    <td> Hommes </td>
+                <?php endif ?> 
+                <?php if (($membres['statut']) == 0) : ?> 
+                    <td> membre </td>
+                <?php else : ?> 
+                    <td> admin </td>
+                <?php endif ?> 
+                <td> <?= $membres['date_enregistrement']?> </td>
+                
+                <td> 
+                    <a href="gestion_des_membres.php?id=<?=$membres['id_membre']?>" class="bouton_lien"><i class="far fa-edit"></i></a>
+                </td>
+            </tr>
         <?php endforeach; ?>
     </table>
-
+    
     <!-- Modification des informations du membres -->
     <form action="gestion_des_membres.php?id=<?=$modifier_membre['id_membre']?>" method="post" >
         <div class="row ml-5 mt-5">
             <div class="col-md-6">
-            <div class="form-group w-75">
+                <div class="form-group w-75">
                     <label> Email  : </label>
                     <input type="text" name="email" class="form-control" value="<?= $modifier_membre['email'] ?? '' ?>" readonly>
                 </div>
@@ -127,12 +123,10 @@ include __DIR__ .'/../assets/includes/header_admin.php';
                     <label> Pseudo : </label>
                     <input type="text" name="pseudo" class="form-control" value="<?= $modifier_membre['pseudo'] ?? '' ?>" readonly>
                 </div>
-
                 <div class="form-group w-75">
                     <label> Nom : </label>
                     <input type="text" name="nom" class="form-control" value="<?= $modifier_membre['nom']?? '' ?>">
                 </div>
-
                 <div class="form-group w-75">
                     <label> Prenom : </label>
                     <input type="text" name="prenom" class="form-control" value="<?= $modifier_membre['prenom'] ?? '' ?>">
@@ -171,6 +165,7 @@ include __DIR__ .'/../assets/includes/header_admin.php';
                         <?php if (isset($modifier_membre['statut']) && $modifier_membre['statut'] == "none") echo 'selected="selected"';?> >
                         ----------
                         </option>
+
                         <option value="0"
                         <?php if (isset($modifier_membre['statut']) && $modifier_membre['statut'] == "0") echo 'selected="selected"';?>>
                         Membre
@@ -180,16 +175,14 @@ include __DIR__ .'/../assets/includes/header_admin.php';
                         <?php if (isset($modifier_membre['statut']) && $modifier_membre['statut'] == "1") echo 'selected="selected"';?>>
                         Admin
                         </option>
-
                     </select>
                 </div>
             </div>
-            <input type="submit" name="mettre_jour" class="btn btn-dark ml-3 mt-4 mb-5" value="Mettre à jour">
-
-            <input type="submit" name="supprimer" class="btn btn-danger ml-3 mt-4 mb-5" value="Supprimer le membre">
+                <input type="submit" name="mettre_jour" class="btn btn-dark ml-3 mt-4 mb-5" value="Mettre à jour">
+                <input type="submit" name="supprimer_membre" class="btn btn-danger ml-3 mt-4 mb-5" value="Supprimer le membre">
+            </div>
         </div>
     </form>
-
 
 <?php 
 //inclusion du footer

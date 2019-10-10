@@ -12,6 +12,7 @@ $(document).ready(function(){
         console.log(parameters); 
 
         $.post("../assets/ajax/tri_categorie_bo_ajax.php", parameters, function(data){
+            console.log(data.resultat)
             $('#resultat').html(data.resultat); 
         },'json'); 
     }

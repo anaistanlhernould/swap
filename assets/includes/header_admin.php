@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="#"> Tableau de bord </a>
+            <a class="nav-link" href="../admin/index_admin.php"> Tableau de bord </a>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,15 +38,13 @@
                 <a class="dropdown-item" href="../admin/gestion_des_categories.php">Gestion des catégories</a>
                 <a class="dropdown-item" href="../admin/gestion_des_membres.php">Gestion des membres</a>
                 <a class="dropdown-item" href="../admin/gestion_des_commentaires.php">Gestion des commentaires</a>
-                <a class="dropdown-item" href="../admin/gestion_des_nptes.php">Gestion des notes</a>
+                <a class="dropdown-item" href="../admin/gestion_des_notes.php">Gestion des notes</a>
             </div>
-        </li>
-
-        <li class="nav-item active">
-            <a class="nav-link" href="#"> Statistiques </a>
         </li>
 
         </ul>
 
     </div>
     </nav>
+
+<main>
